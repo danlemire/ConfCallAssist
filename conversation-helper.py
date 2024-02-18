@@ -38,6 +38,7 @@ import os
 YOUR_API_KEY = os.environ.get("PPLX_API_KEY")
 
 
+
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
@@ -170,7 +171,10 @@ def lookupSpeech(searchresponses):
         model="mistral-7b-instruct",
         messages=messages,
     )
-    print(response.choices[0].message.content, end="")
+    print('------------------------------------------------------')
+    print(response.choices[0].message.content)
+    print('------------------------------------------------------')
+    #print(response.choices[0].message.content, end="")
 
 # chat completion with streaming
 #stream = client.chat.completions.create(

@@ -29,15 +29,20 @@ response = client.chat.completions.create(
     model="mistral-7b-instruct",
     messages=messages,
 )
-print(response)
+print('------------------------------------------------------')
+print(response.choices[0].message.content)
+print('------------------------------------------------------')
+#print(response)
 
+
+notepad = open("notepad.txt", "w")
 # chat completion with streaming
 stream = client.chat.completions.create(
     model="mistral-7b-instruct",
     messages=messages,
-    stream=True,
+    stream=False,
 )
 
-for chunk in stream:
-    if chunk.choices[0].delta.content is not None:
-        print(chunk.choices[0].delta.content, end="")
+#for chunk in stream:
+#    if chunk.choices[0].delta.content is not None:
+#        print(chunk.choices[0].delta.content, end="")
