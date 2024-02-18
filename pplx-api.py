@@ -2,7 +2,6 @@ from openai import OpenAI
 import os
 
 YOUR_API_KEY = os.environ.get("PPLX_API_KEY")
-#YOUR_API_KEY = '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'
 messages = [
     {
         "role": "system",
