@@ -30,12 +30,18 @@ import re
 import sys
 
 from google.cloud import speech
+import google.generativeai as genai
+
 from openai import OpenAI
 
 import pyaudio
 import os
+from dotenv import load_dotenv
 
-YOUR_API_KEY = os.environ.get("PPLX_API_KEY")
+
+load_dotenv()
+YOUR_API_KEY = os.environ["PPLX_API_KEY"]
+genai.configure(api_key=os.environ['GEMINI_API_KEY'])
 
 
 
@@ -143,7 +149,7 @@ class MicrophoneStream:
             yield b"".join(data)
 
 
-def lookupSpeech(searchresponses):
+def lookupSpeechPPLX(searchresponses):
     print("searchresponses: ", searchresponses)
     messages = [
     {
@@ -171,7 +177,7 @@ def lookupSpeech(searchresponses):
         model="mistral-7b-instruct",
         messages=messages,
     )
-    print('------------------------------------------------------')
+    print('------------------- PPLX -----------------------------')
     print(response.choices[0].message.content)
     print('------------------------------------------------------')
     #print(response.choices[0].message.content, end="")
@@ -186,6 +192,23 @@ def lookupSpeech(searchresponses):
 #for chunk in stream:
 #    if chunk.choices[0].delta.content is not None:
 #        print(chunk.choices[0].delta.content, end="")
+
+def lookupSpeechGoog(searchresponses):
+    model = genai.GenerativeModel('gemini-pro')
+
+    response = model.generate_content(
+            "You are an artificial intelligence assistant and you will to " +
+            "take this conversation, understand the important points "         +
+            "and provide helpful, detailed, information to help the user "     +
+            "to continue the conversation by pointing out the most relevant "  +
+            "related information. " +
+            "I want to learn about " + searchresponses
+    )
+    print("searchresponses: ", searchresponses)
+    print('---------------------- GOOG --------------------------')
+    print(response.text)
+    print('------------------------------------------------------')
+    
 
 
 def listen_print_loop(responses: object) -> str:
@@ -238,7 +261,8 @@ def listen_print_loop(responses: object) -> str:
 
         else:
             print(transcript + overwrite_chars)
-            lookupSpeech(transcript + overwrite_chars)
+            lookupSpeechPPLX(transcript + overwrite_chars)
+            lookupSpeechGoog(transcript + overwrite_chars)
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
@@ -252,7 +276,8 @@ def listen_print_loop(responses: object) -> str:
 
 
 def main() -> None:
-    lookupSpeech("Hello World! from perplexity")
+    lookupSpeechGoog("Hello World! from Google!")
+    lookupSpeechPPLX("Hello World! from perplexity")
     """Transcribe speech from audio file."""
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.

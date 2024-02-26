@@ -1,5 +1,9 @@
 from openai import OpenAI
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 YOUR_API_KEY = os.environ.get("PPLX_API_KEY")
 messages = [
