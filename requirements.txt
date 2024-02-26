@@ -2,3 +2,4 @@ openai
 google-cloud-speech
 google-generativeai
 dotenv
+pyaudio
